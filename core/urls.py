@@ -1,5 +1,7 @@
-from django.urls import path, include
+from django.urls import path
+from .views import login, home
 
 urlpatterns = [
-    # path('', include('core.urls')),
+    path('login/', login, name="login"),
+    path('', home, name="home"),
 ]
