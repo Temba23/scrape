@@ -1,8 +1,8 @@
 from django.shortcuts import render, HttpResponse, redirect
 from .forms import LoginForm
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login
-
+from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
 
 def login(request):
     if request.method == "POST":
@@ -20,7 +20,10 @@ def login(request):
     else:
         forms = LoginForm()
         return render(request, 'login.html', {'form':forms})
-    
-    
+
+def logout(request):
+    logout(request)
+    return HttpResponse("Logout Successfull.")
+
 def home(request):
     pass
