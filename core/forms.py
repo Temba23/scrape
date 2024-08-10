@@ -1,8 +1,8 @@
 from django import forms
 
 class LoginForm(forms.Form):
-    email = forms.CharField(
-        label="Email",
+    username = forms.CharField(
+        label="Username",
         max_length=30,
         widget=forms.TextInput(attrs={'class': 'form-control'})
     )
