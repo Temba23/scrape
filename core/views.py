@@ -8,12 +8,15 @@ from django.contrib import messages
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
+# driver = webdriver.Chrome()
+# driver.get("https://www.nepalstock.com/")
 
+# search_box = driver.find_element(By.CLASS_NAME, "table")
 
-driver = webdriver.Chrome()
-driver.get("https://www.nepalstock.com/")
+chromedriver_path = r'C:\Users\user\Downloads\chromedriver-win64\chromedriver-win64\chromedriver.exe'
 
-search_box = driver.find_element(By.CLASS_NAME, "table")
 
 def login(request):
     if request.method == "POST":
@@ -43,7 +46,13 @@ def signout(request):
     return redirect("login")
 
 def home(request):
-    pass
+    try:
+        service = Service(chromedriver_path)
+        driver = webdriver.Chrome(service=service)
+        print("ChromeDriver started successfully.")
+        driver.quit()
+    except Exception as e:
+        print(f"Failed to start ChromeDriver: {e}")
 
 
 def register(request):
