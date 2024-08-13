@@ -5,6 +5,16 @@ from django.contrib.auth import logout
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib import messages
 
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
+
+
+driver = webdriver.Chrome()
+driver.get("https://www.nepalstock.com/")
+
+search_box = driver.find_element(By.CLASS_NAME, "table")
+
 def login(request):
     if request.method == "POST":
         form = LoginForm(request.POST)
@@ -34,6 +44,7 @@ def signout(request):
 
 def home(request):
     pass
+
 
 def register(request):
     if request.method == "POST":
