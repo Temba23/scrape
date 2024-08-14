@@ -15,6 +15,30 @@ from selenium.webdriver.support import expected_conditions as EC
 PATH = 'C:\Program Files (x86)\chromedriver.exe'
 driver = webdriver.Chrome()
 
+def register(request):
+    if request.method == "POST":
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            if User.objects.filter(email=email).exists():
+                messages.error(request, f"User already exists with {email}. Please use another one.")
+            else:
+                username = form.cleaned_data['username']
+                password = form.cleaned_data['password1']
+                if password == form.cleaned_data['password2']:
+                    user = User.objects.create_user(username=username, email=email, password=password)
+                    user.save()
+                    messages.success(request, f"Account created successfully for {username}.")
+                    return redirect('login')
+                else:
+                    messages.error(request, "Passwords don't match.")
+        else:
+            messages.error(request, "Form is invalid. Please correct the errors below.")
+            return redirect("register")
+    
+    else:
+        form = RegisterForm()
+        return render(request, "register.html", {"form":form})
 
 def login(request):
     if request.method == "POST":
@@ -99,27 +123,16 @@ def home(request):
 
     return render(request, 'home.html', context)
 
-def register(request):
-    if request.method == "POST":
-        form = RegisterForm(request.POST)
-        if form.is_valid():
-            email = form.cleaned_data['email']
-            if User.objects.filter(email=email).exists():
-                messages.error(request, f"User already exists with {email}. Please use another one.")
-            else:
-                username = form.cleaned_data['username']
-                password = form.cleaned_data['password1']
-                if password == form.cleaned_data['password2']:
-                    user = User.objects.create_user(username=username, email=email, password=password)
-                    user.save()
-                    messages.success(request, f"Account created successfully for {username}.")
-                    return redirect('login')
-                else:
-                    messages.error(request, "Passwords don't match.")
-        else:
-            messages.error(request, "Form is invalid. Please correct the errors below.")
-            return redirect("register")
-    
-    else:
-        form = RegisterForm()
-        return render(request, "register.html", {"form":form})
+
+def symbol(request):
+    driver.get("https://www.sharesansar.com/today-share-price")
+    search = driver.find_element(By.ID, 'company_search')
+    search.send_keys("MFIL")
+    time.sleep(4)
+    search.send_keys(Keys.RETURN)
+    company_price = driver.find_element(By.CLASS_NAME, 'comp-price')
+    price = company_price.text
+    print(price)
+    return HttpResponse("DOne")
+
+
