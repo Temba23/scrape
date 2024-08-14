@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>NEPSE Stock Data</title>
+</head>
+<body>
+    <h1>NEPSE Stock Data</h1>
+    <table border="1">
+        <tr>
+            <th>SN</th>
+            <th>Company Name</th>
+            <th>No of Transactions</th>
+            <th>Max Price</th>
+            <th>Min Price</th>
+            <th>Closing Price</th>
+            <th>Traded Shares</th>
+            <th>Amount</th>
+            <th>Previous Closing</th>
+        </tr>
+        {% for stock in stock_data %}
+        <tr>
+            <td>{{ stock.SN }}</td>
+            <td>{{ stock.Company }}</td>
+            <td>{{ stock.Transactions }}</td>
+            <td>{{ stock.Max_Price }}</td>
+            <td>{{ stock.Min_Price }}</td>
+            <td>{{ stock.Closing_Price }}</td>
+            <td>{{ stock.Traded_Shares }}</td>
+            <td>{{ stock.Amount }}</td>
+            <td>{{ stock.Previous_Closing }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
