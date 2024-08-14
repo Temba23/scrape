@@ -8,14 +8,12 @@ from django.contrib import messages
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
-# driver = webdriver.Chrome()
-# driver.get("https://www.nepalstock.com/")
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
-# search_box = driver.find_element(By.CLASS_NAME, "table")
 
-chromedriver_path = r'C:\Users\user\Downloads\chromedriver-win64\chromedriver-win64\chromedriver.exe'
+PATH = 'C:\Program Files (x86)\chromedriver.exe'
+driver = webdriver.Chrome()
 
 
 def login(request):
@@ -46,13 +44,14 @@ def signout(request):
     return redirect("login")
 
 def home(request):
-    try:
-        service = Service(chromedriver_path)
-        driver = webdriver.Chrome(service=service)
-        print("ChromeDriver started successfully.")
-        driver.quit()
-    except Exception as e:
-        print(f"Failed to start ChromeDriver: {e}")
+    driver.get("https://www.nepalstock.com/today-price")
+    # search = driver.find_element(By.CLASS_NAME, "symbol-search")
+    # search.send_keys("AKPL")
+    # search.send_keys(Keys.RETURN)
+
+    title = driver.title
+    print(title)
+    return HttpResponse(f"The title is {title}")
 
 
 def register(request):
