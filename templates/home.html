@@ -1,12 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>NEPSE Stock Data</title>
-</head>
-<body>
-    <h1>NEPSE Stock Data</h1>
-    <table border="1">
+{% extends 'base.html' %}
+
+{% block title %}NEPSE Stock Data{% endblock %}
+
+{% block header %}
+    NEPSE Stock Data
+{% endblock %}
+
+{% block content %}
+    <table class="table" border="1">
         <tr>
             <th>SN</th>
             <th>Symbol</th>
@@ -30,5 +31,4 @@
         </tr>
         {% endfor %}
     </table>
-</body>
-</html>
+{% endblock %}
