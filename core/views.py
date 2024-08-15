@@ -68,55 +68,45 @@ def signout(request):
     return redirect("login")
 
 
+
 def home(request):
+    driver = webdriver.Chrome()
+
     driver.get("https://www.sharesansar.com/today-share-price")
+    time.sleep(2)
 
-    time.sleep(5)
-
-    rows = driver.find_elements(By.ID, 'headFixed_wrapper')
-    time.sleep(5)
-    # columns = driver.find_elements(By.CLASS_NAME, 'sorting')
-    # for i in columns:
-    #     print(i.text)
-
-    # print("hello")
+    table = driver.find_element(By.ID, 'headFixed')    
+    rows = table.find_elements(By.TAG_NAME, 'tr')
+    
     stock_data = []
 
-    for row in rows:
-        columns= row.find_elements(By.TAG_NAME, 'tr')
+    for row in rows[1:]:
+        columns = row.find_elements(By.TAG_NAME, 'td')
         
-        if columns:
-            # Extract data for each column
+        if len(columns) >= 9: 
             sn = columns[0].text
             company_name = columns[1].text
-            no_of_transactions = columns[2].text
-            max_price = columns[3].text
-            min_price = columns[4].text
-            closing_price = columns[5].text
-            traded_shares = columns[6].text
-            amount = columns[7].text
-            previous_closing = columns[8].text
+            open = columns[3].text
+            max_price = columns[4].text
+            min_price = columns[5].text
+            closing_price = columns[6].text
+            traded_shares = columns[8].text
+            previous_closing = columns[9].text
 
-            # Store the data in a dictionary
             stock = {
                 'SN': sn,
                 'Company': company_name,
-                'Transactions': no_of_transactions,
+                'Open': open,
                 'Max_Price': max_price,
                 'Min_Price': min_price,
                 'Closing_Price': closing_price,
                 'Traded_Shares': traded_shares,
-                'Amount': amount,
                 'Previous_Closing': previous_closing,
             }
-
-            # Append the stock data to the list
             stock_data.append(stock)
 
-    # Close the WebDriver
     driver.quit()
-    print(stock_data)
-    # Render the scraped data to the template
+
     context = {
         'stock_data': stock_data,
     }
