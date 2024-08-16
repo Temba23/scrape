@@ -30,3 +30,11 @@ class RegisterForm(forms.Form):
         label="Confirm Password",
         widget=forms.PasswordInput(attrs={'class': 'form-control'})
     )
+
+
+class SymbolForm(forms.Form):
+        symbol = forms.CharField(
+        label="Company Scrip",
+        max_length=10,
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )

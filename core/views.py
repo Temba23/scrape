@@ -1,5 +1,5 @@
 from django.shortcuts import render, HttpResponse, redirect
-from .forms import LoginForm, RegisterForm
+from .forms import LoginForm, RegisterForm, SymbolForm
 from django.contrib.auth.models import User
 from django.contrib.auth import logout
 from django.contrib.auth import authenticate, login as auth_login
@@ -115,14 +115,23 @@ def home(request):
 
 
 def symbol(request):
-    driver.get("https://www.sharesansar.com/today-share-price")
-    search = driver.find_element(By.ID, 'company_search')
-    search.send_keys("MFIL")
-    time.sleep(4)
-    search.send_keys(Keys.RETURN)
-    company_price = driver.find_element(By.CLASS_NAME, 'comp-price')
-    price = company_price.text
-    print(price)
-    return HttpResponse("DOne")
+    if request.method == "POST":
+        form = SymbolForm(request.POST)
+        if form.is_valid():
+            scrip = form.cleaned_data['symbol']
+        driver.get("https://www.sharesansar.com/today-share-price")
+        search = driver.find_element(By.ID, 'company_search')
+        search.send_keys(f"{scrip}")
+        time.sleep(4)
+        search.send_keys(Keys.RETURN)
+        company_price = driver.find_element(By.CLASS_NAME, 'comp-price')
+        price = company_price.text
+        messages.success(request, f"The price of {scrip} is {price}.")
+        return redirect('symbol')
+    
+    else:
+        form = SymbolForm()
+        return render(request, "symbol.html", {"form":form})
+        
 
 

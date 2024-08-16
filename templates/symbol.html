@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}
+Company Search
+{% endblock %}
+
+{% block content %}
+
+{% if messages %}
+<ul>
+{% for message in messages %}
+    <h3{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h3>
+{% endfor %}
+</ul>
+{% endif %}
+
+<form method="POST" class="">
+    {% csrf_token %}
+    <div class="form-group">
+        {{ form.symbol.label_tag }}
+        {{ form.symbol}}
+    </div>
+    <button type="submit" class="btn">Search</button>
+</form>
+
+{% endblock %}
