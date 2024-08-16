@@ -119,15 +119,20 @@ def symbol(request):
         form = SymbolForm(request.POST)
         if form.is_valid():
             scrip = form.cleaned_data['symbol']
-        driver.get("https://www.sharesansar.com/today-share-price")
-        search = driver.find_element(By.ID, 'company_search')
-        search.send_keys(f"{scrip}")
-        time.sleep(4)
-        search.send_keys(Keys.RETURN)
-        company_price = driver.find_element(By.CLASS_NAME, 'comp-price')
-        price = company_price.text
-        messages.success(request, f"The price of {scrip} is {price}.")
-        return redirect('symbol')
+            try:
+                driver.get("https://www.sharesansar.com/today-share-price")
+                search = driver.find_element(By.ID, 'company_search')
+                search.send_keys(f"{scrip}")
+                time.sleep(4)
+                search.send_keys(Keys.RETURN)
+                company_price = driver.find_element(By.CLASS_NAME, 'comp-price')
+                price = company_price.text
+                messages.success(request, f"The price of {scrip} is {price}.")
+                return redirect('symbol')
+            except Exception as e:
+                messages.error(f"{e} occured.")
+        else:
+            return HttpResponse("Form Invalid.")
     
     else:
         form = SymbolForm()
