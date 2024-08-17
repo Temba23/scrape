@@ -1,5 +1,5 @@
 from django.shortcuts import render, HttpResponse, redirect
-from .forms import LoginForm, RegisterForm, SymbolForm
+from .forms import LoginForm, RegisterForm, SymbolForm, AlertForm
 from django.contrib.auth.models import User
 from django.contrib.auth import logout
 from django.contrib.auth import authenticate, login as auth_login
@@ -11,6 +11,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+from .models import Alert
 
 PATH = 'C:\Program Files (x86)\chromedriver.exe'
 driver = webdriver.Chrome()
@@ -139,4 +140,34 @@ def symbol(request):
         return render(request, "symbol.html", {"form":form})
         
 
+def alert(request):
+    if request.method == "POST":
+        form = AlertForm(request.POST)
+        if form.is_valid():
+            scrip = form.cleaned_data['symbol']
+            target = form.cleaned_data['target']
+            try:
+                driver.get("https://www.sharesansar.com/today-share-price")
+                search = driver.find_element(By.ID, 'company_search')
+                search.send_keys(f"{scrip}")
+                time.sleep(4)
+                search.send_keys(Keys.RETURN)
+                company_price = driver.find_element(By.CLASS_NAME, 'comp-price')
+                price = company_price.text
 
+                taken_date = driver.find_element(By.CLASS_NAME, 'comp-ason')
+                date = taken_date.text
+                user = request.user
+
+                alert = Alert.objects.get_or_create(user=user, scrip=scrip, alert_on=target, date=date, today=price)
+                alert.save()
+                messages.success(request, f"The alert for {scrip} is set to {target}.")
+                return redirect('alert')
+            except Exception as e:
+                messages.error(f"{e} occured.")
+        else:
+            return HttpResponse("Form Invalid.")
+    
+    else:
+        form = AlertForm()
+        return render(request, "alert.html", {"form":form})

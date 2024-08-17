@@ -38,3 +38,16 @@ class SymbolForm(forms.Form):
         max_length=10,
         widget=forms.TextInput(attrs={'class': 'form-control'})
     )
+        
+
+class AlertForm(forms.Form):
+        symbol = forms.CharField(
+        label="Company Scrip",
+        max_length=10,
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+        target = forms.CharField(
+        label="Minimun Target",
+        max_length=10,
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
