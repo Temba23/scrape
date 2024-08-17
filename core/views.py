@@ -128,10 +128,15 @@ def symbol(request):
                 search.send_keys(Keys.RETURN)
                 company_price = driver.find_element(By.CLASS_NAME, 'comp-price')
                 price = company_price.text
-                messages.success(request, f"The price of {scrip} is {price}.")
+                
+                taken_date = driver.find_element(By.CLASS_NAME, 'comp-ason')
+                date = taken_date.text
+                messages.success(request, f"The price of {scrip} is {price} on {date}.")
                 return redirect('symbol')
             except Exception as e:
                 messages.error(f"{e} occured.")
+            finally:
+                driver.quit()
         else:
             return HttpResponse("Form Invalid.")
     
@@ -146,28 +151,40 @@ def alert(request):
         if form.is_valid():
             scrip = form.cleaned_data['symbol']
             target = form.cleaned_data['target']
+            user = request.user
             try:
                 driver.get("https://www.sharesansar.com/today-share-price")
                 search = driver.find_element(By.ID, 'company_search')
-                search.send_keys(f"{scrip}")
-                time.sleep(4)
+                search.send_keys(scrip)
+                time.sleep(2)
                 search.send_keys(Keys.RETURN)
+
                 company_price = driver.find_element(By.CLASS_NAME, 'comp-price')
                 price = company_price.text
 
-                taken_date = driver.find_element(By.CLASS_NAME, 'comp-ason')
-                date = taken_date.text
-                user = request.user
+                alert, created = Alert.objects.get_or_create(
+                    user=user, 
+                    scrip=scrip, 
+                    alert_on=target, 
+                    today= price
+                )
+                if created:
+                    messages.success(request, f"The alert for {scrip} is set to {target}.")
+                else:
+                    messages.info(request, f"Alert for {scrip} already exists.")
 
-                alert = Alert.objects.get_or_create(user=user, scrip=scrip, alert_on=target, date=date, today=price)
-                alert.save()
-                messages.success(request, f"The alert for {scrip} is set to {target}.")
                 return redirect('alert')
+
             except Exception as e:
-                messages.error(f"{e} occured.")
+                messages.error(request, f"An error occurred: {e}")
+
+            finally:
+                driver.quit()
+            
         else:
-            return HttpResponse("Form Invalid.")
-    
+            messages.error(request, "Form is invalid. Please correct the errors.")
+
     else:
         form = AlertForm()
-        return render(request, "alert.html", {"form":form})
+
+    return render(request, "alert.html", {"form": form})
