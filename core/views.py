@@ -71,6 +71,7 @@ def signout(request):
 
 
 def home(request):
+    user = request.user
     driver = webdriver.Chrome()
 
     driver.get("https://www.sharesansar.com/today-share-price")
@@ -94,6 +95,12 @@ def home(request):
             traded_shares = columns[8].text
             previous_closing = columns[9].text
 
+            alert = Alert.objects.filter(user=user).first()
+            scrip = alert.scrip
+            if scrip == company_name:
+                alert.today = closing_price
+                alert.save()
+                
             stock = {
                 'SN': sn,
                 'Company': company_name,
