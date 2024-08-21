@@ -6,9 +6,13 @@ from django.core.mail import send_mail
 from django.conf import settings
 # Create your models here.
 
+
+class Scrip(models.Model):
+    scrip = models.CharField(max_length=15)
+    
 class Alert(models.Model):
     user = models.ForeignKey(User, related_name="user_alert", on_delete=models.CASCADE)
-    scrip = models.CharField(max_length=15)
+    scrip = models.ForeignKey(Scrip, on_delete=models.CASCADE)
     alert_on = models.IntegerField(max_length=6)
     today = models.IntegerField(max_length=6)
 
