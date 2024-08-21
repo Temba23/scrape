@@ -12,7 +12,7 @@ class Scrip(models.Model):
     
 class Alert(models.Model):
     user = models.ForeignKey(User, related_name="user_alert", on_delete=models.CASCADE)
-    scrip = models.ForeignKey(Scrip, on_delete=models.CASCADE)
+    scrip = models.ForeignKey(Scrip, on_delete=models.CASCADE, related_name="scrip_alert")
     alert_on = models.IntegerField(max_length=6)
     today = models.IntegerField(max_length=6)
 

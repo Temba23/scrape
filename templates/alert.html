@@ -17,14 +17,14 @@ Create Alert
 <form method="POST" class="">
     {% csrf_token %}
     <div class="form-group">
-        {{ form.symbol.label_tag }}
-        {{ form.symbol}}
+        {{ form.scrip.label_tag }}
+        {{ form.scrip}}
     </div>
     <div class="form-group">
-        {{ form.target.label_tag }}
-        {{ form.target}}
+        {{ form.alert_on.label_tag }}
+        {{ form.alert_on}}
     </div>
-    <button type="submit" class="btn">Search</button>
+    <button type="submit" class="btn">Create</button>
 </form>
 
 {% endblock %}

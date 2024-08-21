@@ -11,7 +11,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-from .models import Alert
+from .models import Alert, Scrip
 
 PATH = 'C:\Program Files (x86)\chromedriver.exe'
 driver = webdriver.Chrome()
@@ -81,6 +81,7 @@ def home(request):
     rows = table.find_elements(By.TAG_NAME, 'tr')
     
     stock_data = []
+    user_alerts = Alert.objects.filter(user=user)
 
     for row in rows[1:]:
         columns = row.find_elements(By.TAG_NAME, 'td')
@@ -95,11 +96,10 @@ def home(request):
             traded_shares = columns[8].text
             previous_closing = columns[9].text
 
-            alert = Alert.objects.filter(user=user).first()
-            scrip = alert.scrip
-            if scrip == company_name:
-                alert.today = closing_price
-                alert.save()
+            for alert in user_alerts:
+                if alert.scrip.scrip == company_name:
+                    alert.today = int(closing_price.replace(',', ''))
+                    alert.save()
                 
             stock = {
                 'SN': sn,
@@ -127,6 +127,8 @@ def symbol(request):
         form = SymbolForm(request.POST)
         if form.is_valid():
             scrip = form.cleaned_data['symbol']
+            scrip_data, created = Scrip.objects.get_or_create(scrip=scrip)
+            scrip_data.save()
             try:
                 driver.get("https://www.sharesansar.com/today-share-price")
                 search = driver.find_element(By.ID, 'company_search')
@@ -135,6 +137,7 @@ def symbol(request):
                 search.send_keys(Keys.RETURN)
                 company_price = driver.find_element(By.CLASS_NAME, 'comp-price')
                 price = company_price.text
+                
                 
                 taken_date = driver.find_element(By.CLASS_NAME, 'comp-ason')
                 date = taken_date.text
