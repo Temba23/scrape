@@ -198,3 +198,7 @@ def alert(request):
         form = AlertForm()
 
     return render(request, "alert.html", {"form": form})
+
+
+def base(request):
+    return render(request, "dash.html")
