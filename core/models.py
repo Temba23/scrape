@@ -9,6 +9,9 @@ from django.conf import settings
 
 class Scrip(models.Model):
     scrip = models.CharField(max_length=15)
+
+    def __str__(self):
+        return self.scrip
     
 class Alert(models.Model):
     user = models.ForeignKey(User, related_name="user_alert", on_delete=models.CASCADE)
