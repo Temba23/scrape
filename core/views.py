@@ -10,6 +10,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from django.contrib.auth.decorators import login_required
 
 from .models import Alert, Scrip
 
@@ -69,7 +70,7 @@ def signout(request):
     return redirect("login")
 
 
-
+@login_required
 def home(request):
     user = request.user
     driver = webdriver.Chrome()
@@ -121,7 +122,7 @@ def home(request):
 
     return render(request, 'home.html', context)
 
-
+@login_required
 def symbol(request):
     if request.method == "POST":
         form = SymbolForm(request.POST)
@@ -154,7 +155,7 @@ def symbol(request):
         form = SymbolForm()
         return render(request, "symbol.html", {"form":form})
         
-
+@login_required
 def alert(request):
     if request.method == "POST":
         form = AlertForm(request.POST)
@@ -199,6 +200,6 @@ def alert(request):
 
     return render(request, "alert.html", {"form": form})
 
-
+@login_required
 def base(request):
     return render(request, "dash.html")
