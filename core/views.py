@@ -80,6 +80,8 @@ def home(request):
 
     table = driver.find_element(By.ID, 'headFixed')    
     rows = table.find_elements(By.TAG_NAME, 'tr')
+    taken_date = driver.find_element(By.XPATH, '//*[@id="todayshareprice_data"]/h5/span')
+    date = taken_date.text
     
     stock_data = []
     user_alerts = Alert.objects.filter(user=user)
@@ -118,6 +120,7 @@ def home(request):
 
     context = {
         'stock_data': stock_data,
+        'date' : date
     }
 
     return render(request, 'home.html', context)
