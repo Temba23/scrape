@@ -163,8 +163,8 @@ def alert(request):
     if request.method == "POST":
         form = AlertForm(request.POST)
         if form.is_valid():
-            scrip = form.cleaned_data['symbol']
-            target = form.cleaned_data['target']
+            scrip = form.cleaned_data['scrip']
+            target = form.cleaned_data['alert_on']
             user = request.user
             try:
                 driver.get("https://www.sharesansar.com/today-share-price")
