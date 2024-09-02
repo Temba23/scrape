@@ -169,13 +169,12 @@ def alert(request):
             try:
                 driver.get("https://www.sharesansar.com/today-share-price")
                 search = driver.find_element(By.ID, 'company_search')
-                search.send_keys(scrip)
-                time.sleep(2)
+                search.send_keys(f'{scrip}')
+                time.sleep(5)
                 search.send_keys(Keys.RETURN)
 
                 company_price = driver.find_element(By.CLASS_NAME, 'comp-price')
                 price = company_price.text
-
                 alert, created = Alert.objects.get_or_create(
                     user=user, 
                     scrip=scrip, 
