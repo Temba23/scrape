@@ -205,3 +205,17 @@ def alert(request):
 @login_required
 def base(request):
     return render(request, "dash.html")
+
+def watchlist(request):
+    if request.method=="GET":
+        user = request.user.id
+        alert = Alert.objects.get(user=user)
+        context = {
+            "user" : request.user,
+            "scrip" : alert.scrip,
+            "alert_on" : alert.alert_on,
+            "today" : alert.today
+        }
+        return render(request, "watchlist.html", context=context)
+    else:
+        return messages.error("Method Not Allowed.")

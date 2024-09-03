@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}Watchlist{% endblock %}
+
+{% block content %}
+
+{% block header %}
+    Watchlist
+{% endblock %}
+<h1 class="c">Market Watchlist of {{user}}</h1>
+    <table class="table" border="1">
+        <tr>
+            <th>Scrip</th>
+            <th>Target</th>
+            <th>Today Close</th>
+        </tr>
+        {% for stock in context %}
+        <tr>
+            <td>{{ stock.scrip }}</td>
+            <td>{{ stock.alert_on }}</td>
+            <td>{{ stock.today }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
