@@ -208,15 +208,19 @@ def base(request):
 
 def watchlist(request):
     if request.method=="GET":
-        user = request.user.id
-        alert = Alert.objects.get(user=user)
-        context = {
-            "user" : request.user,
-            "scrip" : alert.scrip.scrip,
-            "alert_on" : alert.alert_on,
-            "today" : alert.today
-        }
-        print(context)
-        return render(request, "watchlist.html", context=context)
+        user = request.user
+        alert = Alert.objects.get(user=user.id)
+        try:
+            context = {
+                "user" : request.user,
+                "scrip" : alert.scrip.scrip,
+                "alert_on" : alert.alert_on,
+                "today" : alert.today
+            }
+            return render(request, "watchlist.html", context=context)
+        except Alert.DoesNotExist:
+            messages.error(f'No watchlist for {user}') 
+            return redirect('watchlist')
     else:
-        return messages.error("Method Not Allowed.")
+        messages.error("Method Not Allowed.")
+        return redirect('watchlist')

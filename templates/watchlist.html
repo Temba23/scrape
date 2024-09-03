@@ -3,28 +3,27 @@
 {% block title %}Watchlist{% endblock %}
 
 {% block content %}
-
-{% block header %}
-    Watchlist
-{% endblock %}
-
+{% if messages %}
+<ul>
+{% for message in messages %}
+    <h3{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h3>
+{% endfor %}
+</ul>
+{% endif %}
 <h1 class="c">Market Watchlist of {{ user.username }}</h1>
 
-{% if scrip %}
-    <table class="table" border="1">
-        <tr>
-            <th>Scrip</th>
-            <th>Target</th>
-            <th>Today Close</th>
-        </tr>
-        <tr>
-            <td>{{ scrip }}</td>
-            <td>{{ alert_on }}</td>
-            <td>{{ today }}</td>
-        </tr>
-    </table>
-{% else %}
-    <p>{{ message }}</p>
-{% endif %}
+<table class="table" border="1">
+    <tr>
+        <th>Scrip</th>
+        <th>Target</th>
+        <th>Today Close</th>
+    </tr>
+    <tr>
+        <td>{{ scrip }}</td>
+        <td>{{ alert_on }}</td>
+        <td>{{ today }}</td>
+    </tr>
+</table>
+
 
 {% endblock %}
