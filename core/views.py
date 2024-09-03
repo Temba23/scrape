@@ -212,10 +212,11 @@ def watchlist(request):
         alert = Alert.objects.get(user=user)
         context = {
             "user" : request.user,
-            "scrip" : alert.scrip,
+            "scrip" : alert.scrip.scrip,
             "alert_on" : alert.alert_on,
             "today" : alert.today
         }
+        print(context)
         return render(request, "watchlist.html", context=context)
     else:
         return messages.error("Method Not Allowed.")

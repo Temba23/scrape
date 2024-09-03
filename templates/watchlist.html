@@ -7,19 +7,24 @@
 {% block header %}
     Watchlist
 {% endblock %}
-<h1 class="c">Market Watchlist of {{user}}</h1>
+
+<h1 class="c">Market Watchlist of {{ user.username }}</h1>
+
+{% if scrip %}
     <table class="table" border="1">
         <tr>
             <th>Scrip</th>
             <th>Target</th>
             <th>Today Close</th>
         </tr>
-        {% for stock in context %}
         <tr>
-            <td>{{ stock.scrip }}</td>
-            <td>{{ stock.alert_on }}</td>
-            <td>{{ stock.today }}</td>
+            <td>{{ scrip }}</td>
+            <td>{{ alert_on }}</td>
+            <td>{{ today }}</td>
         </tr>
-        {% endfor %}
     </table>
+{% else %}
+    <p>{{ message }}</p>
+{% endif %}
+
 {% endblock %}
