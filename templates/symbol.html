@@ -20,7 +20,15 @@ Company Search
         {{ form.symbol.label_tag }}
         {{ form.symbol}}
     </div>
-    <button type="submit" class="btn">Search</button>
+    <button type="submit" class="btn">
+        {% if method == "DELETE" %}
+            Delete
+        {% elif method == "PUT" %}
+            Update
+        {% else %}
+            Search
+        {% endif %}
+    </button>
 </form>
 
 {% endblock %}
