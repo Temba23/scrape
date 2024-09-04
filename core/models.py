@@ -17,7 +17,7 @@ class Alert(models.Model):
     user = models.ForeignKey(User, related_name="user_alert", on_delete=models.CASCADE)
     scrip = models.ForeignKey(Scrip, on_delete=models.CASCADE, related_name="scrip_alert")
     alert_on = models.IntegerField(max_length=6)
-    today = models.FloatField(max_length=6)
+    today = models.CharField(max_length=12)
 
     def check_and_send_alert(self):
         if self.alert_on <= self.today:

@@ -209,7 +209,7 @@ def base(request):
 def watchlist(request):
     if request.method=="GET":
         user = request.user
-        alert = Alert.objects.get(user=user.id)
+        alert = Alert.objects.filter(user=user.id)
         try:
             context = {
                 "user" : request.user,
@@ -230,21 +230,26 @@ def del_watchlist(request):
         form = SymbolForm(request.POST)
         if form.is_valid():
             scrip = form.cleaned_data['symbol']
-            d_scrip = Alert.objects.get(scrip=scrip, user=request.user.id)
+
+            req_scrip = Scrip.objects.filter(scrip=scrip).first()
+            if not req_scrip:
+                messages.error(request, f"{scrip} does not exist.")
+                return redirect('del_watchlist')
+
+            d_scrip = Alert.objects.filter(scrip=req_scrip, user=request.user).first()
             if d_scrip:
-                dele = d_scrip.delete()
-                dele.save()
-                messages.success(f"{scrip} deleted successfully.")
-                pass
+                d_scrip.delete()
+                messages.success(request, f"{scrip} deleted successfully.")
             else:
-                messages.error(f"{scrip} doesnot exist.")
-                pass
-            return redirect('watchlist')
+                messages.error(request, f"{scrip} does not exist in your watchlist.")
+
+            return redirect('del_watchlist')
 
         else:
-            return HttpResponse("Form Invalid.")
-    
+            messages.error(request, "Form is invalid.")
+            return redirect('del_watchlist')
+
     else:
         form = SymbolForm()
-        return render(request, "symbol.html", {"form":form})
+        return render(request, "symbol.html", {"form": form})
 
