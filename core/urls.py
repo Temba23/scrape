@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import login, signout, register, home, symbol, alert, base, watchlist
+from .views import login, signout, register, home, symbol, alert, base, watchlist, del_watchlist
 
 urlpatterns = [
     path('login/', login, name="login"),
@@ -10,4 +10,5 @@ urlpatterns = [
     path('symbol/', symbol, name="symbol"),
     path('alert/', alert, name="alert"),
     path('watchlist/', watchlist, name="watchlist"),
+    path('del_watchlist/', del_watchlist, name="del_watchlist"),
 ]

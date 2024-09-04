@@ -224,3 +224,27 @@ def watchlist(request):
     else:
         messages.error("Method Not Allowed.")
         return redirect('watchlist')
+    
+def del_watchlist(request):
+    if request.method == "POST":
+        form = SymbolForm(request.POST)
+        if form.is_valid():
+            scrip = form.cleaned_data['symbol']
+            d_scrip = Alert.objects.get(scrip=scrip, user=request.user.id)
+            if d_scrip:
+                dele = d_scrip.delete()
+                dele.save()
+                messages.success(f"{scrip} deleted successfully.")
+                pass
+            else:
+                messages.error(f"{scrip} doesnot exist.")
+                pass
+            return redirect('watchlist')
+
+        else:
+            return HttpResponse("Form Invalid.")
+    
+    else:
+        form = SymbolForm()
+        return render(request, "symbol.html", {"form":form})
+
