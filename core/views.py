@@ -207,22 +207,29 @@ def base(request):
     return render(request, "dash.html")
 
 def watchlist(request):
-    if request.method=="GET":
+    if request.method == "GET":
         user = request.user
-        alert = Alert.objects.filter(user=user.id)
-        try:
+        alert = Alert.objects.filter(user=user)
+        alert_data = []
+        if alert.exists():
+            for alerts in alert:
+                stock = {
+                        "scrip": alerts.scrip.scrip,
+                        "alert_on": alerts.alert_on,
+                        "today": alerts.today
+                        }
+                alert_data.append(stock)
+
             context = {
-                "user" : request.user,
-                "scrip" : alert.scrip.scrip,
-                "alert_on" : alert.alert_on,
-                "today" : alert.today
+                "user": user,
+                "stock": alert_data
             }
-            return render(request, "watchlist.html", context=context)
-        except Alert.DoesNotExist:
-            messages.error(f'No watchlist for {user}') 
+            return render(request, "watchlist.html", context)
+        else:
+            messages.error(request, f'No watchlist for {user}')
             return redirect('watchlist')
     else:
-        messages.error("Method Not Allowed.")
+        messages.error(request, "Method Not Allowed.")
         return redirect('watchlist')
     
 def del_watchlist(request):

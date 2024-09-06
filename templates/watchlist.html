@@ -5,12 +5,13 @@
 {% block content %}
 {% if messages %}
 <ul>
-{% for message in messages %}
-    <h3{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h3>
-{% endfor %}
+    {% for message in messages %}
+        <h3{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h3>
+    {% endfor %}
 </ul>
 {% endif %}
-<h1 class="c">Market Watchlist for {{ user.username }}</h1>
+
+<h1 class="c">Market Watchlist for {{ user }}</h1>
 
 <table class="table" border="1">
     <tr>
@@ -18,11 +19,13 @@
         <th>Target</th>
         <th>Today Close</th>
     </tr>
+    {% for alert in stock %}
     <tr>
-        <td>{{ scrip }}</td>
-        <td>{{ alert_on }}</td>
-        <td>{{ today }}</td>
+        <td>{{ alert.scrip }}</td>
+        <td>{{ alert.alert_on }}</td>
+        <td>{{ alert.today }}</td>
     </tr>
+    {% endfor %}
 </table>
 
 <a href="{% url 'del_watchlist' %}" class="c dashboard-button">Delete Watchlist</a>
