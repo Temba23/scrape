@@ -29,3 +29,14 @@ class Alert(models.Model):
         recipient_list = [self.user.email]
         
         send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, recipient_list)
+
+class Watchlist(models.Model):
+    user = models.ForeignKey(User, related_name="user_watchlist", on_delete=models.CASCADE)
+    scrip = models.CharField(max_length=12)
+    today = models.CharField(max_length=12)
+    alert_on = models.IntegerField(max_length=6)
+    open = models.CharField(max_length=12)
+    close = models.CharField(max_length=12)
+    volume = models.CharField(max_length=50)
+    
+    

@@ -206,7 +206,7 @@ def alert(request):
 def base(request):
     return render(request, "dash.html")
 
-def watchlist(request):
+def view_alerts(request):
     if request.method == "GET":
         user = request.user
         alert = Alert.objects.filter(user=user)
@@ -227,12 +227,12 @@ def watchlist(request):
             return render(request, "watchlist.html", context)
         else:
             messages.error(request, f'No watchlist for {user}')
-            return redirect('watchlist')
+            return redirect('view_alerts')
     else:
         messages.error(request, "Method Not Allowed.")
-        return redirect('watchlist')
+        return redirect('view_alerts')
     
-def del_watchlist(request):
+def del_alerts(request):
     if request.method == "POST":
         form = SymbolForm(request.POST)
         if form.is_valid():
@@ -241,7 +241,7 @@ def del_watchlist(request):
             req_scrip = Scrip.objects.filter(scrip=scrip).first()
             if not req_scrip:
                 messages.error(request, f"{scrip} does not exist.")
-                return redirect('del_watchlist')
+                return redirect('del_alerts')
 
             d_scrip = Alert.objects.filter(scrip=req_scrip, user=request.user).first()
             if d_scrip:
@@ -250,7 +250,7 @@ def del_watchlist(request):
             else:
                 messages.error(request, f"{scrip} does not exist in your watchlist.")
 
-            return redirect('del_watchlist')
+            return redirect('del_alerts')
 
         else:
             messages.error(request, "Form is invalid.")
