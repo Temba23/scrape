@@ -101,7 +101,7 @@ def home(request):
 
             for alert in user_alerts:
                 if alert.scrip.scrip == company_name:
-                    alert.today = int(closing_price.replace(',', ''))
+                    alert.today = closing_price.replace(',', '')
                     alert.save()
 
             for watchlist in user_watchlist:
@@ -287,3 +287,24 @@ def create_watchlist(request):
     else:
         form = SymbolForm()
         return render(request, "symbol.html", {"form": form})
+    
+def view_watchlist(request):
+    if request.method == "GET":
+        watch = Watchlist.objects.get(user=request.user)
+        list = WatchlistData.objects.filter(watchlist=watch).first()
+        watchlist_data = []
+        data = {
+            'today' : list.today,
+            'open' : list.open,
+            'close' : list.close,
+            'volume' : list.volume,
+            'max' : list.max,
+            'min' : list.min,
+            'scrip' : list.watchlist.scrip,
+            'user' : request.user
+        }
+        watchlist_data.append(data)
+        context = {
+            'data' : watchlist_data
+        }
+        return render(request, 'watchlist.html', context)
