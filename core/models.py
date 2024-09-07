@@ -33,6 +33,9 @@ class Alert(models.Model):
 class Watchlist(models.Model):
     user = models.ForeignKey(User, related_name="user_watchlist", on_delete=models.CASCADE)
     scrip = models.CharField(max_length=12)
+
+class WatchlistData(models.Model):
+    watchlist = models.ForeignKey(Watchlist, related_name="watchlistdata", on_delete=models.CASCADE)
     today = models.CharField(max_length=12)
     alert_on = models.IntegerField(max_length=6)
     open = models.CharField(max_length=12)

@@ -12,7 +12,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from django.contrib.auth.decorators import login_required
 
-from .models import Alert, Scrip
+from .models import Alert, Scrip, Watchlist
 
 PATH = 'C:\Program Files (x86)\chromedriver.exe'
 driver = webdriver.Chrome()
@@ -224,7 +224,7 @@ def view_alerts(request):
                 "user": user,
                 "stock": alert_data
             }
-            return render(request, "watchlist.html", context)
+            return render(request, "viewalerts.html", context)
         else:
             messages.error(request, f'No watchlist for {user}')
             return redirect('view_alerts')
@@ -260,3 +260,14 @@ def del_alerts(request):
         form = SymbolForm()
         return render(request, "symbol.html", {"form": form})
 
+def create_watchlist(request):
+    if request.method == "POST":
+        form = SymbolForm(request.POST)
+        if form.is_valid():
+            scrip = form.cleaned_data['symbol']
+            scrip, created = Watchlist.objects.get_or_create(user=request.user.id, scrip=scrip)
+            messages.success(f"{scrip} added on watchlist for {request.user}.")
+            return redirect('create_watchlist')
+    else:
+        form = SymbolForm()
+        return render(request, "symbol.html", {"form": form})
