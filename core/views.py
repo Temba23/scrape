@@ -12,7 +12,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from django.contrib.auth.decorators import login_required
 
-from .models import Alert, Scrip, Watchlist
+from .models import Alert, Scrip, Watchlist, WatchlistData
 
 PATH = 'C:\Program Files (x86)\chromedriver.exe'
 driver = webdriver.Chrome()
@@ -85,7 +85,7 @@ def home(request):
     
     stock_data = []
     user_alerts = Alert.objects.filter(user=user)
-
+    user_watchlist = Watchlist.objects.filter(user=user)
     for row in rows[1:]:
         columns = row.find_elements(By.TAG_NAME, 'td')
         
@@ -103,7 +103,20 @@ def home(request):
                 if alert.scrip.scrip == company_name:
                     alert.today = int(closing_price.replace(',', ''))
                     alert.save()
-                
+
+            for watchlist in user_watchlist:
+                if watchlist.scrip == company_name:
+                    WatchlistData.objects.update_or_create(
+                        watchlist=watchlist,
+                        today=date,
+                        defaults={
+                            'open': open,
+                            'close': closing_price,
+                            'volume': traded_shares,
+                            'max': max_price,
+                            'min': min_price
+                        }
+                    )
             stock = {
                 'SN': sn,
                 'Company': company_name,
@@ -265,8 +278,11 @@ def create_watchlist(request):
         form = SymbolForm(request.POST)
         if form.is_valid():
             scrip = form.cleaned_data['symbol']
-            scrip, created = Watchlist.objects.get_or_create(user=request.user.id, scrip=scrip)
-            messages.success(f"{scrip} added on watchlist for {request.user}.")
+            watchlist_item, created = Watchlist.objects.get_or_create(user=request.user, scrip=scrip)
+            if created:
+                messages.success(request, f"{scrip} added to your watchlist.")
+            else:
+                messages.info(request, f"{scrip} is already in your watchlist.")
             return redirect('create_watchlist')
     else:
         form = SymbolForm()

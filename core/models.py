@@ -37,9 +37,10 @@ class Watchlist(models.Model):
 class WatchlistData(models.Model):
     watchlist = models.ForeignKey(Watchlist, related_name="watchlistdata", on_delete=models.CASCADE)
     today = models.CharField(max_length=12)
-    alert_on = models.IntegerField(max_length=6)
     open = models.CharField(max_length=12)
     close = models.CharField(max_length=12)
     volume = models.CharField(max_length=50)
+    max = models.CharField(max_length=50)
+    min = models.CharField(max_length=50)
     
     
