@@ -286,7 +286,11 @@ def create_watchlist(request):
             return redirect('create_watchlist')
     else:
         form = SymbolForm()
-        return render(request, "symbol.html", {"form": form})
+        context = {
+            "form": form,
+            "flag" : True
+        }
+        return render(request, "symbol.html", context)
     
 def view_watchlist(request):
     if request.method == "GET":

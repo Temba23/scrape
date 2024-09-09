@@ -25,10 +25,13 @@ Company Search
             Delete
         {% elif method == "PUT" %}
             Update
-        {% else %}
-            Search
+        {% else%}
+            Create
         {% endif %}
     </button>
 </form>
-
+    
+{% if flag %}
+    <a href="{% url 'view_watchlist' %}" class="c dashboard-button">View Watchlist</a>
+{% endif %}
 {% endblock %}
