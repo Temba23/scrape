@@ -288,7 +288,7 @@ def create_watchlist(request):
         form = SymbolForm()
         context = {
             "form": form,
-            "flag" : True
+            "flag" : 'create'
         }
         return render(request, "symbol.html", context)
     
@@ -312,3 +312,22 @@ def view_watchlist(request):
             'data' : watchlist_data
         }
         return render(request, 'watchlist.html', context)
+
+def del_watchlist(request):
+    if request.method == "DELETE":
+        form = SymbolForm(request.POST)
+        if form.is_valid():
+            scrip = form.cleaned_data['symbol']
+            list = Watchlist.objects.get(user=request.user, scrip=scrip)
+            if list:
+                list.delete()
+                messages.success(request, f"{scrip} removed from your watchlist.")
+            else:
+                messages.error(request, f"{scrip} is not in your watchlist.")
+            return redirect('view_watchlist')
+    else:
+        form = SymbolForm()
+        context = {
+            "form": form,
+        }
+        return render(request, "symbol.html", context)
