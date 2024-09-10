@@ -315,7 +315,7 @@ def view_watchlist(request):
         return render(request, 'watchlist.html', context)
 
 def del_watchlist(request):
-    if request.method == "DELETE":
+    if request.method == "POST":
         form = SymbolForm(request.POST)
         if form.is_valid():
             scrip = form.cleaned_data['symbol']
