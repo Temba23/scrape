@@ -294,20 +294,21 @@ def create_watchlist(request):
     
 def view_watchlist(request):
     if request.method == "GET":
-        watch = Watchlist.objects.get(user=request.user)
-        list = WatchlistData.objects.filter(watchlist=watch).first()
+        watch = Watchlist.objects.filter(user=request.user)
+        data = WatchlistData.objects.filter(watchlist__in=watch).all()
         watchlist_data = []
-        data = {
-            'today' : list.today,
-            'open' : list.open,
-            'close' : list.close,
-            'volume' : list.volume,
-            'max' : list.max,
-            'min' : list.min,
-            'scrip' : list.watchlist.scrip,
-            'user' : request.user
-        }
-        watchlist_data.append(data)
+        for list in data:
+            data = {
+                'today' : list.today,
+                'open' : list.open,
+                'close' : list.close,
+                'volume' : list.volume,
+                'max' : list.max,
+                'min' : list.min,
+                'scrip' : list.watchlist.scrip,
+                'user' : request.user
+            }
+            watchlist_data.append(data)
         context = {
             'data' : watchlist_data
         }
