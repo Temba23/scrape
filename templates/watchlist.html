@@ -27,6 +27,7 @@
         {% endfor %}
     </table>
     <p class="note c">Note : Please Scrape today's data if all of your watchlist data is not being rendered</p>
+    <a href="{% url 'base' %}" class="dashboard-button ">Home</a>
     <a href="{% url 'del_watchlist' %}" class="c dashboard-button">Remove Watchlist</a>
 
 {% endblock %}

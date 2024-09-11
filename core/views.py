@@ -160,10 +160,9 @@ def symbol(request):
                 date = taken_date.text
                 messages.success(request, f"The price of {scrip} is {price} on {date}.")
                 return redirect('symbol')
-            except Exception as e:
-                messages.error(f"{e} occured.")
-            finally:
-                driver.quit()
+            except:
+                messages.error(request, f"Error occured. Try Again.")
+                return redirect('symbol')
         else:
             return HttpResponse("Form Invalid.")
     
@@ -203,10 +202,6 @@ def alert(request):
 
             except Exception as e:
                 messages.error(request, f"An error occurred: {e}")
-
-            finally:
-                driver.quit()
-            
         else:
             messages.error(request, "Form is invalid. Please correct the errors.")
 
