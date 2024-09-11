@@ -144,3 +144,5 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.environ['EMAIL']
 EMAIL_HOST_PASSWORD = os.environ['PASSWORD']
 DEFAULT_FROM_EMAIL = os.environ['EMAIL']
+
+LOGIN_URL = '/login/'

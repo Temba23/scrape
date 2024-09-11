@@ -54,7 +54,7 @@ def login(request):
             if user is not None:
                 auth_login(request, user)
                 messages.success(request, f"Welcome back, {user.username}!")
-                return redirect("home")
+                return redirect("base")
             else:
                 messages.error(request, "Invalid email or password. Please try again.")
         else:
@@ -215,7 +215,7 @@ def alert(request):
 
     return render(request, "alert.html", {"form": form})
 
-@login_required
+@login_required(login_url='/login/')
 def base(request):
     return render(request, "dash.html")
 
