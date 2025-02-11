@@ -97,3 +97,10 @@ main {
     font-weight: 100;
     font-size: smaller;
 }
+
+.re {
+    text-align: center;
+    font-size: 15px;
+    font-weight: 100;
+    margin-top: 20px;
+}
